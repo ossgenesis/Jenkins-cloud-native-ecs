@@ -1,0 +1,26 @@
+{
+    "Version": "2012-10-17",
+    "Statement": [
+        {
+            "Sid": "AllowCrossAccountAccess",
+            "Effect": "Allow",
+            "Principal": {
+                "AWS": [
+                    "arn:aws:iam::981134614696:role/aws-reserved/sso.amazonaws.com/eu-west-1/AWSReservedSSO_its-ww-ait-readonly-role_f0e52bedbeef60db",
+                    "arn:aws:iam::280751646874:role/aws-reserved/sso.amazonaws.com/eu-west-1/AWSReservedSSO_its-ww-ait-readonly-role_ae620080cca7b5ba",
+                    "arn:aws:iam::236237753407:role/aws-reserved/sso.amazonaws.com/eu-west-1/AWSReservedSSO_its-ww-ait-readonly-role_78a7113aed6fb360",
+                    "arn:aws:iam::981134614696:role/ait-glue-np-EUW-jenkins-ec2-role",
+                    "arn:aws:iam::280751646874:role/ait-glue-pp-EUW-jenkins-ec2-role",
+                    "arn:aws:iam::236237753407:role/ait-glue-p-EUW-jenkins-ec2-role"
+                ]
+            },
+            "Action": [
+                "s3:*"
+            ],
+            "Resource": [
+                "arn:aws:s3:::GLUE_JOB_NAME-glue",
+                "arn:aws:s3:::GLUE_JOB_NAME-glue/*"
+            ]
+        }
+    ]
+}

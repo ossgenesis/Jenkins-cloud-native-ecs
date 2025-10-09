@@ -1,0 +1,8 @@
+{
+  "comment": "roles to branch mapping",
+  "glue": {
+    "non-prod": "arn:aws:iam::981134614696:role/ait-glue-np-EUW-jenkins-ec2-role",
+    "pre-prod": "arn:aws:iam::280751646874:role/ait-glue-pp-EUW-jenkins-ec2-role",
+    "main": "arn:aws:iam::236237753407:role/ait-glue-p-EUW-jenkins-ec2-role"
+  }
+}

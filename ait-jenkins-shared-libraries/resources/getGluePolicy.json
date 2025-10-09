@@ -1,0 +1,19 @@
+{
+    "Version": "2012-10-17",
+    "Statement": [
+        {
+            "Action": [
+                "sts:AssumeRole",
+                "sts:GetServiceBearerToken",
+                "iam:PassRole",
+                "iam:GetRole",
+                "ssm:GetParameter",
+                "glue:*",
+                "logs:*",
+                "s3:*"
+            ],
+            "Effect": "Allow",
+            "Resource": "*"
+        }
+    ]
+}
