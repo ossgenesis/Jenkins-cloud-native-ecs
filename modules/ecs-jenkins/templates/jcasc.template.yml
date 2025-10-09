@@ -1,0 +1,270 @@
+jenkins:
+  systemMessage: "Jenkins configured automatically by Jenkins Configuration as Code plugin (JCasC)."
+  authorizationStrategy:
+    azureAdMatrix:
+      entries:
+        - group:
+            name: "ITS - AIT AWS Jenkins Admin (629ccd0f-c915-4ad7-a623-ddbde59b839a)"
+            permissions:
+              - "Overall/Administer"
+        - group:
+            name: "ITS - AIT AWS Jenkins Dev (3160d76e-b1dd-4145-90b2-d4476f377fa2)"
+            permissions:
+              - "Job/Build"
+              - "Job/Cancel"
+              - "Job/Read"
+              - "Job/Workspace"
+              - "Overall/Read"
+              - "View/Read"
+        - group:
+            name: "ITS - AIT AWS Jenkins DevOps (e9919f16-422e-4fd3-91ad-636f53599057)"
+            permissions:
+              - "Credentials/Create"
+              - "Credentials/View"
+              - "Job/Build"
+              - "Job/Cancel"
+              - "Job/Configure"
+              - "Job/Create"
+              - "Job/Delete"
+              - "Job/Read"
+              - "Job/Workspace"
+              - "Overall/Read"
+              - "View/Configure"
+              - "View/Create"
+              - "View/Delete"
+              - "View/Read"
+  clouds:
+    - ecs:
+        cluster: "${ecs_cluster_arn}"
+        jenkinsUrl: "${jenkins_private_url}"
+        name: "fargate"
+        regionName: "${region_name}"
+        credentialsId: "" # not needed but required for jcasc plugin. A role will be used to access the resources.
+        allowedOverrides: "inheritFrom,label,memory,cpu,image"
+        templates:
+          # Example Agent
+          - assignPublicIp: false
+            cpu: ${example_agent_cpu_memory["cpu"]}
+            image: "${example_agent_docker_image}"
+            label: "${example_agent_label}"
+            launchType: "FARGATE"
+            platformVersion: "${fargate_platform_version}"
+            memory: 0
+            memoryReservation: ${example_agent_cpu_memory["memory"]}
+            networkMode: "awsvpc"
+            privileged: false
+            remoteFSRoot: "/home/jenkins"
+            securityGroups: "${agents_sg_ids}"
+            sharedMemorySize: 0
+            subnets: "${agents_subnet_ids}"
+            templateName: "example-template"
+            uniqueRemoteFSRoot: false
+            taskrole: "${agents_task_role_arn}"
+            executionRole: "${agents_execution_role_arn}"
+            logDriver: "awslogs"
+            logDriverOptions:
+              - name: "awslogs-region"
+                value: "${region_name}"
+              - name: "awslogs-group"
+                value: "${agents_log_group}"
+              - name: "awslogs-stream-prefix"
+                value: "task"
+          
+          # Glue Agent
+          - assignPublicIp: false
+            cpu: ${glue_agent_cpu_memory["cpu"]}
+            image: "${glue_agent_docker_image}"
+            label: "${glue_agent_label}"
+            launchType: "FARGATE"
+            platformVersion: "${fargate_platform_version}"
+            memory: 0
+            memoryReservation: ${glue_agent_cpu_memory["memory"]}
+            networkMode: "awsvpc"
+            privileged: false
+            remoteFSRoot: "/home/jenkins"
+            securityGroups: "${agents_sg_ids}"
+            sharedMemorySize: 0
+            subnets: "${agents_subnet_ids}"
+            templateName: "glue-template"
+            uniqueRemoteFSRoot: false
+            taskrole: "${glue_task_role_arn}"
+            executionRole: "${glue_execution_role_arn}"
+            logDriver: "awslogs"
+            logDriverOptions:
+              - name: "awslogs-region"
+                value: "${region_name}"
+              - name: "awslogs-group"
+                value: "${agents_log_group}"
+              - name: "awslogs-stream-prefix"
+                value: "glue-task"
+
+          # Lambda Agent
+          - assignPublicIp: false
+            cpu: ${lambda_agent_cpu_memory["cpu"]}
+            image: "${lambda_agent_docker_image}"
+            label: "${lambda_agent_label}"
+            launchType: "FARGATE"
+            platformVersion: "${fargate_platform_version}"
+            memory: 0
+            memoryReservation: ${lambda_agent_cpu_memory["memory"]}
+            networkMode: "awsvpc"
+            privileged: false
+            remoteFSRoot: "/home/jenkins"
+            securityGroups: "${agents_sg_ids}"
+            sharedMemorySize: 0
+            subnets: "${agents_subnet_ids}"
+            templateName: "lambda-template"
+            uniqueRemoteFSRoot: false
+            taskrole: "${lambda_task_role_arn}"
+            executionRole: "${lambda_execution_role_arn}"
+            logDriver: "awslogs"
+            logDriverOptions:
+              - name: "awslogs-region"
+                value: "${region_name}"
+              - name: "awslogs-group"
+                value: "${agents_log_group}"
+              - name: "awslogs-stream-prefix"
+                value: "lambda-task"
+
+          # Kaniko Agent
+          - assignPublicIp: false
+            cpu: ${kaniko_agent_cpu_memory["cpu"]}
+            image: "${kaniko_agent_docker_image}"
+            label: "${kaniko_agent_label}"
+            launchType: "FARGATE"
+            platformVersion: "${fargate_platform_version}"
+            memory: 0
+            memoryReservation: ${kaniko_agent_cpu_memory["memory"]}
+            networkMode: "awsvpc"
+            privileged: false
+            remoteFSRoot: "/home/jenkins"
+            securityGroups: "${agents_sg_ids}"
+            sharedMemorySize: 0
+            subnets: "${agents_subnet_ids}"
+            templateName: "kaniko-template"
+            uniqueRemoteFSRoot: false
+            taskrole: "${kaniko_task_role_arn}"
+            executionRole: "${kaniko_execution_role_arn}"
+            logDriver: "awslogs"
+            logDriverOptions:
+              - name: "awslogs-region"
+                value: "${region_name}"
+              - name: "awslogs-group"
+                value: "${agents_log_group}"
+              - name: "awslogs-stream-prefix"
+                value: "kaniko-task"
+          # ACE Agent
+          - assignPublicIp: false
+            cpu: ${ace_agent_cpu_memory["cpu"]}
+            image: "${ace_agent_docker_image}"
+            label: "${ace_agent_label}"
+            launchType: "FARGATE"
+            platformVersion: "${fargate_platform_version}"
+            memory: 0
+            memoryReservation: ${ace_agent_cpu_memory["memory"]}
+            networkMode: "awsvpc"
+            privileged: false
+            remoteFSRoot: "/home/jenkins"
+            securityGroups: "${agents_sg_ids}"
+            sharedMemorySize: 0
+            subnets: "${agents_subnet_ids}"
+            templateName: "ace-template"
+            uniqueRemoteFSRoot: false
+            taskrole: "${ace_task_role_arn}"
+            executionRole: "${ace_execution_role_arn}"
+            ephemeralStorageSizeInGiB: 60
+            logDriver: "awslogs"
+            logDriverOptions:
+              - name: "awslogs-region"
+                value: "${region_name}"
+              - name: "awslogs-group"
+                value: "${agents_log_group}"
+              - name: "awslogs-stream-prefix"
+                value: "ace-task"
+          # Terraform Agent
+          - assignPublicIp: false
+            cpu: ${terraform_agent_cpu_memory["cpu"]}
+            image: "${terraform_agent_docker_image}"
+            label: "${terraform_agent_label}"
+            launchType: "FARGATE"
+            platformVersion: "${fargate_platform_version}"
+            memory: 0
+            memoryReservation: ${terraform_agent_cpu_memory["memory"]}
+            networkMode: "awsvpc"
+            privileged: false
+            remoteFSRoot: "/home/jenkins"
+            securityGroups: "${agents_sg_ids}"
+            sharedMemorySize: 0
+            subnets: "${agents_subnet_ids}"
+            templateName: "terraform-template"
+            uniqueRemoteFSRoot: false
+            taskrole: "${terraform_task_role_arn}"
+            executionRole: "${terraform_execution_role_arn}"
+            ephemeralStorageSizeInGiB: 60
+            logDriver: "awslogs"
+            logDriverOptions:
+              - name: "awslogs-region"
+                value: "${region_name}"
+              - name: "awslogs-group"
+                value: "${agents_log_group}"
+              - name: "awslogs-stream-prefix"
+                value: "terraform-task"
+  # Rest of the configuration remains the same
+
+jobs:
+  - script: >
+      pipelineJob('glue') {
+        description("A Glue example job configured with JCasC and Job DSL Plugins.")
+        definition {
+          cps {
+            sandbox()
+            script("""\
+              pipeline {
+                agent {
+                  label '${glue_agent_label}'
+                }
+                stages {
+                  stage ('Print env vars') {
+                    steps {
+                      sh "env"
+                    }
+                  }
+                  stage ('Run Glue Task') {
+                    steps {
+                      sh "echo 'Running Glue task...'"
+                      # Add specific glue commands here
+                    }
+                  }
+                }
+              }""".stripIndent())
+          }
+        }
+      }
+  - script: >
+      pipelineJob('lambda') {
+        description("A Lambda example job configured with JCasC and Job DSL Plugins.")
+        definition {
+          cps {
+            sandbox()
+            script("""\
+              pipeline {
+                agent {
+                  label '${lambda_agent_label}'
+                }
+                stages {
+                  stage ('Print env vars') {
+                    steps {
+                      sh "env"
+                    }
+                  }
+                  stage ('Invoke Lambda') {
+                    steps {
+                      sh "echo 'Invoking Lambda function...'"
+                      # Add specific lambda commands here
+                    }
+                  }
+                }
+              }""".stripIndent())
+          }
+        }
+      }

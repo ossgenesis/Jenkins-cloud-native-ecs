@@ -1,0 +1,49 @@
+# Stage 1: Pull Kaniko binaries from official image
+FROM gcr.io/kaniko-project/executor:latest AS kaniko
+
+# Stage 2: Jenkins agent with Kaniko and tools
+FROM jenkins/inbound-agent:latest-rhel-ubi9-jdk21
+
+USER root
+
+# Install all required tools via DNF
+RUN dnf -y update && \
+    dnf swap -y curl-minimal curl && \
+    dnf install -y \
+        vim \
+        jq \
+        nmap-ncat \
+        bind-utils \
+        unzip \
+        wget \
+        iputils \
+        git \
+        which \
+        tar \
+        ca-certificates && \
+    dnf clean all
+
+# Install Terraform
+# Install Terraform (correct for RHEL/UBI)
+RUN dnf -y install dnf-plugins-core && \
+    dnf config-manager --add-repo https://rpm.releases.hashicorp.com/RHEL/hashicorp.repo && \
+    dnf -y install terraform
+
+
+# Install AWS CLI
+RUN curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip" && \
+    unzip awscliv2.zip && \
+    ./aws/install && \
+    rm -rf awscliv2.zip aws/
+
+# ✅ Copy only the Kaniko parts you need
+COPY --from=kaniko /kaniko/executor /kaniko/executor
+COPY --from=kaniko /kaniko/ssl /kaniko/ssl
+
+# Set Kaniko environment variables
+ENV SSL_CERT_DIR=/kaniko/ssl/certs
+ENV PATH=$PATH:/kaniko
+ENV DOCKER_CONFIG=/root/.docker
+
+USER root
+

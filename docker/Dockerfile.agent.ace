@@ -1,0 +1,117 @@
+# Build and run:
+#
+# docker build -t ace:13.0.1.0 -f Dockerfile .
+# docker run -e LICENSE=accept -p 7600:7600 -p 7800:7800 --rm -ti ace:13.0.1.0
+#
+# Can also mount a volume for the work directory:
+#
+# docker run -e LICENSE=accept -v /what/ever/dir:/home/aceuser/ace-server -p 7600:7600 -p 7800:7800 --rm -ti ace:13.0.1.0
+#
+# This might require a local directory with the right permissions, or changing the userid further down . . .
+
+FROM registry.access.redhat.com/ubi9/ubi-minimal as builder
+
+RUN microdnf update -y && microdnf install -y util-linux tar && microdnf clean all
+
+ARG USERNAME
+ARG PASSWORD
+# Download and reference the ACE-LINUX64-DEVELOPER.tar.gz from here https://www.ibm.com/resources/mrs/assets?source=swg-wmbfd eg.
+ARG DOWNLOAD_URL=http://10.163.0.24:8000/ace-packages.tar.gz
+
+RUN mkdir -p /opt/ibm/ace-13 \
+    && if [ -z $USERNAME ]; then curl ${DOWNLOAD_URL}; else curl -u "${USERNAME}:${PASSWORD}" ${DOWNLOAD_URL}; fi | \
+    tar zx --absolute-names \
+    --exclude ace-*.*/tools \
+    --exclude ace-*.*/server/tools/ibm-dfdl-java.zip \
+    --exclude ace-*.*/server/tools/proxyservlet.war \
+    --exclude ace-*.*/server/bin/TADataCollector.sh \
+    --exclude ace-*.*/server/transformationAdvisor/ta-plugin-ace.jar \
+    --strip-components 1 \
+    --directory /opt/ibm/ace-13
+
+FROM jenkins/inbound-agent:latest-rhel-ubi9-jdk21
+
+# Switch to root user for package installation
+USER root
+
+# Update package list and install required dependencies
+RUN dnf update -y && dnf install -y --allowerasing \
+    python3-pip \
+    python3 \
+    curl \
+    jq \
+    unzip \
+    git \
+    ca-certificates \
+    wget \
+    findutils \
+    util-linux \
+    which \
+    tar \
+    shadow-utils \
+    && dnf clean all
+
+# Reinstall tzdata to fix timezone issues
+RUN dnf install -y tzdata
+# Install AWS CLI using pip
+RUN pip3 install awscli
+
+# Ensure directory exists for GPG keys
+RUN mkdir -p /usr/share/keyrings
+
+# Install Terraform (latest version)
+RUN wget -O /usr/share/keyrings/hashicorp-archive-keyring.gpg https://apt.releases.hashicorp.com/gpg && \
+    echo "[hashicorp]" > /etc/yum.repos.d/hashicorp.repo && \
+    echo "name=HashiCorp Stable" >> /etc/yum.repos.d/hashicorp.repo && \
+    echo "baseurl=https://rpm.releases.hashicorp.com/RHEL/9/\$basearch/stable" >> /etc/yum.repos.d/hashicorp.repo && \
+    echo "enabled=1" >> /etc/yum.repos.d/hashicorp.repo && \
+    echo "gpgcheck=1" >> /etc/yum.repos.d/hashicorp.repo && \
+    echo "gpgkey=https://rpm.releases.hashicorp.com/gpg" >> /etc/yum.repos.d/hashicorp.repo
+
+RUN dnf install -y terraform && dnf clean all
+
+RUN dnf install -y terraform && dnf clean all
+
+# Verify Java installation
+RUN java -version && which java
+
+# Install `sbot`
+RUN wget https://github.com/restechnica/semverbot/releases/download/v1.7.2/sbot-linux-amd64 \
+    && mv sbot-linux-amd64 /usr/local/bin/sbot \
+    && chmod +x /usr/local/bin/sbot
+
+# Create Jenkins home directory and set correct permissions
+RUN mkdir -p /home/jenkins/.ssh \
+    && mkdir -p /home/jenkins/ace-13 \
+    && chown -R jenkins:jenkins /home/jenkins/ace-13 \
+    && chown -R jenkins:jenkins /home/jenkins/.ssh
+
+RUN mkdir -p /etc/pki/java \
+    && chown -R jenkins:jenkins /etc/pki/java
+
+# Copy ACE from the builder stage
+COPY --from=builder /opt/ibm/ace-13/* /home/jenkins/ace-13
+RUN  chown -R jenkins:jenkins /home/jenkins/.ssh
+
+# Verify ACE binaries exist
+#RUN ls -lah /home/jenkins/ace-server
+
+# Ensure ACE commands are in PATH
+ENV PATH="/home/jenkins/ace-server/bin:$PATH"
+
+# Copy certificates and SSH keys
+COPY ace-packages/acecerts /etc/pki/java/
+COPY ace-packages/.ssh/* /home/jenkins/.ssh/
+
+RUN chown -R jenkins:jenkins /home/jenkins/ace-13 \
+    && chown -R jenkins:jenkins /home/jenkins/.ssh \
+    && chmod -R 600 /home/jenkins/.ssh/*
+# Expose ports.  7600, 7800, 7843 for ACE;
+EXPOSE 7600 7800 7843
+
+# Set default Integration Server name
+ENV ACE_SERVER_NAME ace-server
+
+USER jenkins
+# Set entrypoint to run the server
+#ENTRYPOINT ["bash", "-c", ". /opt/ibm/ace-13/server/bin/mqsiprofile && IntegrationServer --name ${ACE_SERVER_NAME} -w /home/aceuser/ace-server"]
