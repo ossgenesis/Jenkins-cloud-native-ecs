@@ -1,24 +1,25 @@
 # Required Parameters
-vpc_id = "vpc-0ca8568d095164407"
+aws_region = "ap-south-2"
+vpc_id = "vpc-0004f7060daf74278"
 
 private_subnets = [
-  "subnet-01c3d35a07ce39e34",
-  "subnet-0902f9a6293151c8f"
+  "subnet-0be8725878dcd88d9",
+  "subnet-045af808a3bd2a1bd"
 ]
 
 public_subnets = [
-  "subnet-01c3d35a07ce39e34",
-  "subnet-0902f9a6293151c8f"
+  "subnet-00bfa4d7558e0eb95",
+  "subnet-041d88811d89ba2be"
 ]
 
-agent_docker_image = "public.ecr.aws/j4w9x2o6/ww/jenkins-alpine-agent-aws:latest"
+agent_docker_image = "564186749702.dkr.ecr.ap-south-2.amazonaws.com/jenkins-agent:latest"
 
-glue_agent_docker_image = "136474465872.dkr.ecr.eu-west-1.amazonaws.com/ww/jenkins-alpine-agent-aws:latest"
+glue_agent_docker_image = "564186749702.dkr.ecr.ap-south-2.amazonaws.com/jenkins-agent:latest"
 
-lambda_agent_docker_image = "136474465872.dkr.ecr.eu-west-1.amazonaws.com/ww/jenkins-alpine-agent-aws:latest"
+lambda_agent_docker_image = "564186749702.dkr.ecr.ap-south-2.amazonaws.com/jenkins-agent:latest"
 
-kaniko_agent_docker_image = "136474465872.dkr.ecr.eu-west-1.amazonaws.com/ww/jenkins-aws-fargate-kaniko:v2"
-ace_agent_docker_image = "136474465872.dkr.ecr.eu-west-1.amazonaws.com/ww/jenkins-alpine-ace-agent-aws:latest"
-terraform_agent_docker_image = "136474465872.dkr.ecr.eu-west-1.amazonaws.com/ww/jenkins-alpine-terraform-agent-aws:latest"
-controller_docker_image = "136474465872.dkr.ecr.eu-west-1.amazonaws.com/ww/jenkins-aws-fargate:2.516.3"
+kaniko_agent_docker_image = "564186749702.dkr.ecr.ap-south-2.amazonaws.com/jenkins-agent:latest"
+ace_agent_docker_image = "564186749702.dkr.ecr.ap-south-2.amazonaws.com/jenkins-agent:latest"
+terraform_agent_docker_image = "564186749702.dkr.ecr.ap-south-2.amazonaws.com/jenkins-agent:latest"
+controller_docker_image = "564186749702.dkr.ecr.ap-south-2.amazonaws.com/jenkins-controller:2.541.3"
 

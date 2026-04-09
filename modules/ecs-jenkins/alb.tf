@@ -1,11 +1,11 @@
 resource "aws_alb" "alb_jenkins_controller" {
   name                       = "alb-jenkins-controller"
-  internal                   = true
+  internal                   = false
   load_balancer_type         = "application"
   security_groups            = [aws_security_group.alb_security_group.id]
   subnets                    = var.public_subnets
   ip_address_type            = "ipv4"
-  enable_deletion_protection = true
+  enable_deletion_protection = false
 }
 
 resource "aws_alb_target_group" "jenkins_controller_tg" {
