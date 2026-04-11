@@ -1,0 +1,5 @@
+blank_issues_enabled: false
+contact_links:
+  - name: Discussions
+    url: https://github.com/ossgenesis/Jenkins-cloud-native-ecs/discussions
+    about: Use discussions for general questions and conversations

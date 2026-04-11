@@ -1,0 +1,45 @@
+name: Documentation Update
+description: Suggest improvements or report issues in the documentation
+title: "[Docs]: "
+labels: ["documentation"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Help us improve the documentation. Let us know what needs updating.
+
+  - type: dropdown
+    id: doc-type
+    attributes:
+      label: Type of update
+      options:
+        - Fix incorrect information
+        - Add missing information
+        - Improve clarity
+        - Add new documentation
+        - Other
+    validations:
+      required: true
+
+  - type: input
+    id: page
+    attributes:
+      label: Which file or section?
+      description: The file name or section that needs updating.
+      placeholder: e.g. README.md, vpc-creation.md
+    validations:
+      required: true
+
+  - type: textarea
+    id: description
+    attributes:
+      label: Describe the change
+      description: What should be added, changed, or removed?
+    validations:
+      required: true
+
+  - type: textarea
+    id: additional
+    attributes:
+      label: Additional context
+      description: Any other context or references.
