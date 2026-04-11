@@ -3,7 +3,7 @@
 Terraform stack to deploy Jenkins on ECS Fargate with Jenkins configuration stored in EFS and agents on Fargate. It can
 be used as a starting point to build a production ready Jenkins on AWS.
 
-More details can be found on [my blog post](https://blog.haidara.io/post/jenkins-aws-fargate/) (in French).
+More details can be found on [my blog post]().
 
 ## How it works
 
@@ -22,7 +22,9 @@ The following main resources will be created:
 
 ## Prerequisites
 
-- A VPC with public and private subnets configured properly (route table, nat gateways...)
+- A VPC with public and private subnets configured properly (route table, nat gateways...).
+  If you want to create it from scratch, follow the steps in [vpc-creation.md](./vpc-creation.md).
+  Note: VPC and networking resources are not part of this Terraform configuration, as due to many custom requirements we excluded these steps here.
 - An IAM user with the proper policies to run Terraform on the following services: EC2, ECS, IAM, S3, Cloudwatch, EFS,
   Route53 et ACM.
 - A recent version of Terraform ( > 0.12.20)
