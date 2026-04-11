@@ -1,4 +1,4 @@
-FROM --platform=linux/amd64 jenkins/jenkins:2.516.3
+FROM --platform=linux/amd64 jenkins/jenkins:2.541.3-jdk21
 
 USER root
 
