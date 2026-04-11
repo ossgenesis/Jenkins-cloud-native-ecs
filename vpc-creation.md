@@ -2,7 +2,7 @@
 
 ## Overview
 
-This document describes the AWS VPC infrastructure created for the Jenkins ECS deployment in the **ap-south-2 (Hyderabad)** region using AWS CLI with the `tcc` profile.
+This document describes the AWS VPC infrastructure created for the Jenkins ECS deployment in the **ap-south-2 (Hyderabad)** region using AWS CLI
 
 ---
 
@@ -12,13 +12,13 @@ This document describes the AWS VPC infrastructure created for the Jenkins ECS d
                           ┌──────────────────────────────────────────────────────────┐
                           │              VPC: jenkins-ecs-vpc                        │
                           │              CIDR: 10.0.0.0/16                           │
-                          │              ID: vpc-0004f7060daf74278                   │
+                          │              ID: vpc-XXXXXXXXXXXXXXXXX                   │
                           │                                                          │
                           │   ┌────────────────────┐  ┌────────────────────┐         │
                           │   │  Public Subnet 1   │  │  Public Subnet 2   │         │
                           │   │  10.0.1.0/24       │  │  10.0.2.0/24       │         │
                           │   │  ap-south-2a       │  │  ap-south-2b       │         │
-                          │   │  subnet-00bfa4d..  │  │  subnet-041d8..    │         │
+                          │   │  subnet-XXXXX4d..  │  │  subnet-YYYY8..    │         │
                           │   │                    │  │                    │         │
         Internet          │   │  ┌──────────────┐  │  │                    │         │
            │              │   │  │ NAT Gateway  │  │  │                    │         │
@@ -26,23 +26,23 @@ This document describes the AWS VPC infrastructure created for the Jenkins ECS d
    ┌───────────────┐      │   │  └──────┬───────┘  │  │                    │         │
    │    Internet   │──────┤   │         │          │  │                    │         │
    │    Gateway    │      │   └─────────┼──────────┘  └────────────────────┘         │
-   │ igw-03dce..   │      │             │                                            │
+   │ igw-XXXXX..   │      │             │                                            │
    └───────────────┘      │             │  Route: 0.0.0.0/0 → NAT GW               │
                           │             ▼                                            │
                           │   ┌────────────────────┐  ┌────────────────────┐         │
                           │   │  Private Subnet 1  │  │  Private Subnet 2  │         │
                           │   │  10.0.10.0/24      │  │  10.0.20.0/24      │         │
                           │   │  ap-south-2a       │  │  ap-south-2b       │         │
-                          │   │  subnet-0be87..    │  │  subnet-045af..    │         │
+                          │   │  subnet-ZZZZ7..    │  │  subnet-WWWWf..    │         │
                           │   └────────────────────┘  └────────────────────┘         │
                           │                                                          │
                           └──────────────────────────────────────────────────────────┘
 
     Route Tables:
     ┌─────────────────────────────────────┐    ┌─────────────────────────────────────┐
-    │  Public RT: rtb-077ba96714d5ea29f   │    │  Private RT: rtb-08841fecdd73e22e4  │
-    │  0.0.0.0/0 → igw-03dce62f87aa59109 │    │  0.0.0.0/0 → nat-0327243d2ad009186 │
-    │  10.0.0.0/16 → local               │    │  10.0.0.0/16 → local               │
+    │  Public RT: rtb-xxxxxxxxxxxxxxxxx   │    │  Private RT: rtb-0yyyyyyyyyyyyyyyy  │
+    │  0.0.0.0/0 → igw-xxxxxxxxxxxxxxxxxx │    │  0.0.0.0/0 → nat-0yyyyyyyyyyyyyyyyy │
+    │  10.0.0.0/16 → local                │    │  10.0.0.0/16 → local                │
     └─────────────────────────────────────┘    └─────────────────────────────────────┘
 ```
 
@@ -52,16 +52,16 @@ This document describes the AWS VPC infrastructure created for the Jenkins ECS d
 
 | Resource | Name | ID | Details |
 |----------|------|----|---------|
-| VPC | jenkins-ecs-vpc | `vpc-0004f7060daf74278` | CIDR: `10.0.0.0/16` |
-| Public Subnet 1 | jenkins-public-subnet-1 | `subnet-00bfa4d7558e0eb95` | `10.0.1.0/24` / ap-south-2a |
-| Public Subnet 2 | jenkins-public-subnet-2 | `subnet-041d88811d89ba2be` | `10.0.2.0/24` / ap-south-2b |
-| Private Subnet 1 | jenkins-private-subnet-1 | `subnet-0be8725878dcd88d9` | `10.0.10.0/24` / ap-south-2a |
-| Private Subnet 2 | jenkins-private-subnet-2 | `subnet-045af808a3bd2a1bd` | `10.0.20.0/24` / ap-south-2b |
-| Internet Gateway | jenkins-igw | `igw-03dce62f87aa59109` | Attached to VPC |
-| NAT Gateway | jenkins-nat-gw | `nat-0327243d2ad009186` | In public subnet 1 |
-| Elastic IP | jenkins-nat-eip | `eipalloc-09f6575d0275ec0e2` | `16.112.195.6` |
-| Public Route Table | jenkins-public-rt | `rtb-077ba96714d5ea29f` | 0.0.0.0/0 → IGW |
-| Private Route Table | jenkins-private-rt | `rtb-08841fecdd73e22e4` | 0.0.0.0/0 → NAT GW |
+| VPC | jenkins-ecs-vpc | `vpc-xxxxxxxxxxxxxxxxxx` | CIDR: `10.0.0.0/16` |
+| Public Subnet 1 | jenkins-public-subnet-1 | `subnet-xxxxxxxxxxxxxxxxx` | `10.0.1.0/24` / ap-south-2a |
+| Public Subnet 2 | jenkins-public-subnet-2 | `subnet-yyyyyyyyyyyyyyyyy` | `10.0.2.0/24` / ap-south-2b |
+| Private Subnet 1 | jenkins-private-subnet-1 | `subnet-zzzzzzzzzzzzzzzzz` | `10.0.10.0/24` / ap-south-2a |
+| Private Subnet 2 | jenkins-private-subnet-2 | `subnet-wwwwwwwwwwwwwwwww` | `10.0.20.0/24` / ap-south-2b |
+| Internet Gateway | jenkins-igw | `igw-xxxxxxxxxxxxxxxxx` | Attached to VPC |
+| NAT Gateway | jenkins-nat-gw | `nat-xxxxxxxxxxxxxxxxx` | In public subnet 1 |
+| Elastic IP | jenkins-nat-eip | `eipalloc-xxxxxxxxxxxxxxxxx` | `x.x.x.x` |
+| Public Route Table | jenkins-public-rt | `rtb-xxxxxxxxxxxxxxxxx` | 0.0.0.0/0 → IGW |
+| Private Route Table | jenkins-private-rt | `rtb-yyyyyyyyyyyyyyyyy` | 0.0.0.0/0 → NAT GW |
 
 ---
 
@@ -82,12 +82,12 @@ Enable DNS support and hostnames:
 
 ```bash
 aws ec2 modify-vpc-attribute \
-  --vpc-id vpc-0004f7060daf74278 \
+  --vpc-id vpc-xxxxxxxxxxxxxxxxx \
   --enable-dns-hostnames '{"Value":true}' \
   --profile tcc
 
 aws ec2 modify-vpc-attribute \
-  --vpc-id vpc-0004f7060daf74278 \
+  --vpc-id vpc-xxxxxxxxxxxxxxxxx \
   --enable-dns-support '{"Value":true}' \
   --profile tcc
 ```
@@ -98,7 +98,7 @@ aws ec2 modify-vpc-attribute \
 
 ```bash
 aws ec2 create-subnet \
-  --vpc-id vpc-0004f7060daf74278 \
+  --vpc-id vpc-xxxxxxxxxxxxxxxxx \
   --cidr-block 10.0.1.0/24 \
   --availability-zone ap-south-2a \
   --tag-specifications 'ResourceType=subnet,Tags=[{Key=Name,Value=jenkins-public-subnet-1}]' \
@@ -109,7 +109,7 @@ aws ec2 create-subnet \
 
 ```bash
 aws ec2 create-subnet \
-  --vpc-id vpc-0004f7060daf74278 \
+  --vpc-id vpc-xxxxxxxxxxxxxxxxx \
   --cidr-block 10.0.2.0/24 \
   --availability-zone ap-south-2b \
   --tag-specifications 'ResourceType=subnet,Tags=[{Key=Name,Value=jenkins-public-subnet-2}]' \
@@ -120,7 +120,7 @@ aws ec2 create-subnet \
 
 ```bash
 aws ec2 create-subnet \
-  --vpc-id vpc-0004f7060daf74278 \
+  --vpc-id vpc-xxxxxxxxxxxxxxxxx \
   --cidr-block 10.0.10.0/24 \
   --availability-zone ap-south-2a \
   --tag-specifications 'ResourceType=subnet,Tags=[{Key=Name,Value=jenkins-private-subnet-1}]' \
@@ -131,7 +131,7 @@ aws ec2 create-subnet \
 
 ```bash
 aws ec2 create-subnet \
-  --vpc-id vpc-0004f7060daf74278 \
+  --vpc-id vpc-xxxxxxxxxxxxxxxxx \
   --cidr-block 10.0.20.0/24 \
   --availability-zone ap-south-2b \
   --tag-specifications 'ResourceType=subnet,Tags=[{Key=Name,Value=jenkins-private-subnet-2}]' \
@@ -146,8 +146,8 @@ aws ec2 create-internet-gateway \
   --profile tcc
 
 aws ec2 attach-internet-gateway \
-  --internet-gateway-id igw-03dce62f87aa59109 \
-  --vpc-id vpc-0004f7060daf74278 \
+  --internet-gateway-id igw-xxxxxxxxxxxxxxxxx \
+  --vpc-id vpc-xxxxxxxxxxxxxxxxx \
   --profile tcc
 ```
 
@@ -155,24 +155,24 @@ aws ec2 attach-internet-gateway \
 
 ```bash
 aws ec2 create-route-table \
-  --vpc-id vpc-0004f7060daf74278 \
+  --vpc-id vpc-xxxxxxxxxxxxxxxxx \
   --tag-specifications 'ResourceType=route-table,Tags=[{Key=Name,Value=jenkins-public-rt}]' \
   --profile tcc
 
 aws ec2 create-route \
-  --route-table-id rtb-077ba96714d5ea29f \
+  --route-table-id rtb-xxxxxxxxxxxxxxxxx \
   --destination-cidr-block 0.0.0.0/0 \
-  --gateway-id igw-03dce62f87aa59109 \
+  --gateway-id igw-xxxxxxxxxxxxxxxxx \
   --profile tcc
 
 aws ec2 associate-route-table \
-  --route-table-id rtb-077ba96714d5ea29f \
-  --subnet-id subnet-00bfa4d7558e0eb95 \
+  --route-table-id rtb-xxxxxxxxxxxxxxxxx \
+  --subnet-id subnet-xxxxxxxxxxxxxxxxx \
   --profile tcc
 
 aws ec2 associate-route-table \
-  --route-table-id rtb-077ba96714d5ea29f \
-  --subnet-id subnet-041d88811d89ba2be \
+  --route-table-id rtb-xxxxxxxxxxxxxxxxx \
+  --subnet-id subnet-yyyyyyyyyyyyyyyyy \
   --profile tcc
 ```
 
@@ -180,12 +180,12 @@ aws ec2 associate-route-table \
 
 ```bash
 aws ec2 modify-subnet-attribute \
-  --subnet-id subnet-00bfa4d7558e0eb95 \
+  --subnet-id subnet-xxxxxxxxxxxxxxxxx \
   --map-public-ip-on-launch \
   --profile tcc
 
 aws ec2 modify-subnet-attribute \
-  --subnet-id subnet-041d88811d89ba2be \
+  --subnet-id subnet-yyyyyyyyyyyyyyyyy \
   --map-public-ip-on-launch \
   --profile tcc
 ```
@@ -205,8 +205,8 @@ Create NAT Gateway in public subnet 1:
 
 ```bash
 aws ec2 create-nat-gateway \
-  --subnet-id subnet-00bfa4d7558e0eb95 \
-  --allocation-id eipalloc-09f6575d0275ec0e2 \
+  --subnet-id subnet-xxxxxxxxxxxxxxxxx \
+  --allocation-id eipalloc-xxxxxxxxxxxxxxxxx \
   --tag-specifications 'ResourceType=natgateway,Tags=[{Key=Name,Value=jenkins-nat-gw}]' \
   --profile tcc
 ```
@@ -215,7 +215,7 @@ Wait for NAT Gateway to become available:
 
 ```bash
 aws ec2 wait nat-gateway-available \
-  --nat-gateway-ids nat-0327243d2ad009186 \
+  --nat-gateway-ids nat-xxxxxxxxxxxxxxxxx \
   --profile tcc
 ```
 
@@ -223,24 +223,24 @@ aws ec2 wait nat-gateway-available \
 
 ```bash
 aws ec2 create-route-table \
-  --vpc-id vpc-0004f7060daf74278 \
+  --vpc-id vpc-xxxxxxxxxxxxxxxxx \
   --tag-specifications 'ResourceType=route-table,Tags=[{Key=Name,Value=jenkins-private-rt}]' \
   --profile tcc
 
 aws ec2 create-route \
-  --route-table-id rtb-08841fecdd73e22e4 \
+  --route-table-id rtb-yyyyyyyyyyyyyyyyy \
   --destination-cidr-block 0.0.0.0/0 \
-  --nat-gateway-id nat-0327243d2ad009186 \
+  --nat-gateway-id nat-xxxxxxxxxxxxxxxxx \
   --profile tcc
 
 aws ec2 associate-route-table \
-  --route-table-id rtb-08841fecdd73e22e4 \
-  --subnet-id subnet-0be8725878dcd88d9 \
+  --route-table-id rtb-yyyyyyyyyyyyyyyyy \
+  --subnet-id subnet-zzzzzzzzzzzzzzzzz \
   --profile tcc
 
 aws ec2 associate-route-table \
-  --route-table-id rtb-08841fecdd73e22e4 \
-  --subnet-id subnet-045af808a3bd2a1bd \
+  --route-table-id rtb-yyyyyyyyyyyyyyyyy \
+  --subnet-id subnet-wwwwwwwwwwwwwwwww \
   --profile tcc
 ```
 
@@ -251,16 +251,16 @@ aws ec2 associate-route-table \
 After creation, the following values were populated in `terraform.tfvars`:
 
 ```hcl
-vpc_id = "vpc-0004f7060daf74278"
+vpc_id = "vpc-xxxxxxxxxxxxxxxxx"
 
 private_subnets = [
-  "subnet-0be8725878dcd88d9",
-  "subnet-045af808a3bd2a1bd"
+  "subnet-zzzzzzzzzzzzzzzzz",
+  "subnet-wwwwwwwwwwwwwwwww"
 ]
 
 public_subnets = [
-  "subnet-00bfa4d7558e0eb95",
-  "subnet-041d88811d89ba2be"
+  "subnet-xxxxxxxxxxxxxxxxx",
+  "subnet-yyyyyyyyyyyyyyyyy"
 ]
 ```
 
@@ -272,30 +272,30 @@ To tear down all resources (in reverse order):
 
 ```bash
 # Delete NAT Gateway
-aws ec2 delete-nat-gateway --nat-gateway-id nat-0327243d2ad009186 --profile tcc
+aws ec2 delete-nat-gateway --nat-gateway-id nat-xxxxxxxxxxxxxxxxx --profile tcc
 
 # Wait for NAT Gateway deletion
-aws ec2 wait nat-gateway-deleted --nat-gateway-ids nat-0327243d2ad009186 --profile tcc
+aws ec2 wait nat-gateway-deleted --nat-gateway-ids nat-xxxxxxxxxxxxxxxxx --profile tcc
 
 # Release Elastic IP
-aws ec2 release-address --allocation-id eipalloc-09f6575d0275ec0e2 --profile tcc
+aws ec2 release-address --allocation-id eipalloc-xxxxxxxxxxxxxxxxx --profile tcc
 
 # Delete subnets
-aws ec2 delete-subnet --subnet-id subnet-00bfa4d7558e0eb95 --profile tcc
-aws ec2 delete-subnet --subnet-id subnet-041d88811d89ba2be --profile tcc
-aws ec2 delete-subnet --subnet-id subnet-0be8725878dcd88d9 --profile tcc
-aws ec2 delete-subnet --subnet-id subnet-045af808a3bd2a1bd --profile tcc
+aws ec2 delete-subnet --subnet-id subnet-xxxxxxxxxxxxxxxxx --profile tcc
+aws ec2 delete-subnet --subnet-id subnet-yyyyyyyyyyyyyyyyy --profile tcc
+aws ec2 delete-subnet --subnet-id subnet-zzzzzzzzzzzzzzzzz --profile tcc
+aws ec2 delete-subnet --subnet-id subnet-wwwwwwwwwwwwwwwww --profile tcc
 
 # Delete route tables (disassociate first if needed)
-aws ec2 delete-route-table --route-table-id rtb-077ba96714d5ea29f --profile tcc
-aws ec2 delete-route-table --route-table-id rtb-08841fecdd73e22e4 --profile tcc
+aws ec2 delete-route-table --route-table-id rtb-xxxxxxxxxxxxxxxxx --profile tcc
+aws ec2 delete-route-table --route-table-id rtb-yyyyyyyyyyyyyyyyy --profile tcc
 
 # Detach and delete Internet Gateway
-aws ec2 detach-internet-gateway --internet-gateway-id igw-03dce62f87aa59109 --vpc-id vpc-0004f7060daf74278 --profile tcc
-aws ec2 delete-internet-gateway --internet-gateway-id igw-03dce62f87aa59109 --profile tcc
+aws ec2 detach-internet-gateway --internet-gateway-id igw-xxxxxxxxxxxxxxxxx --vpc-id vpc-xxxxxxxxxxxxxxxxx --profile tcc
+aws ec2 delete-internet-gateway --internet-gateway-id igw-xxxxxxxxxxxxxxxxx --profile tcc
 
 # Delete VPC
-aws ec2 delete-vpc --vpc-id vpc-0004f7060daf74278 --profile tcc
+aws ec2 delete-vpc --vpc-id vpc-xxxxxxxxxxxxxxxxx --profile tcc
 ```
 
 ---
