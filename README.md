@@ -5,6 +5,8 @@ be used as a starting point to build a production ready Jenkins on AWS.
 
 More details can be found on [my blog post](https://dev.to/bibinskaria/how-to-use-jenkins-effectively-with-ecseks-cluster-4e53).
 
+
+
 ## How it works
 
 It uses a docker image based on the [official Jenkins](https://github.com/jenkinsci/docker). See `docker/` folder.
