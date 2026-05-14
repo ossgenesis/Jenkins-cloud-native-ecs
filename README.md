@@ -78,7 +78,7 @@ This configuration will be read by the Jenkins configuration as code plugin.
 
 To build the image:
 
-Select which version you want to update, currently it in `2.479.3`. If you want to update next major or minor, then select respectivily: [Official jenkins docker images](https://hub.docker.com/r/jenkins/jenkins/tags?name=2.479):
+Select which version you want to update, currently it in `2.479.3`. If you want to update next major or minor, then select respectivily: [Official jenkins docker images](https://hub.docker.com/r/jenkins/jenkins/tags?name=2.555.2):
 
 Change directory to Docker:
 ```
@@ -86,7 +86,7 @@ cd docker
 ```
 Edit `Dockerfile` Jenkins version:
 ```yaml
-FROM --platform=linux/amd64 jenkins/jenkins:2.479.3
+FROM --platform=linux/amd64 jenkins/jenkins:2.555.2
 
 USER root
 
@@ -106,7 +106,7 @@ ENTRYPOINT ["/usr/bin/entrypoint"]
 
 Use the command below to build new Jenkins controller:
 ``` shell
-docker build -f Dockerfile -t 136474465872.dkr.ecr.eu-west-1.amazonaws.com/ww/jenkins-aws-fargate:2.479.3 .
+docker build -f Dockerfile -t 136474465872.dkr.ecr.eu-west-1.amazonaws.com/ww/jenkins-aws-fargate:2.555.2 .
 ```
 However, you will encounter `build error` due to outdated plugin, so in the error output itself it will point out which plugin need to update to which version. 
 Update the `plugin.txt` accordingly and build image again until docker build success.
@@ -159,13 +159,13 @@ USER jenkins
 
 Use the command below to build a new Jenkins controller:
 ``` shell
-docker build -f Dockerfile -t 136474465872.dkr.ecr.eu-west-1.amazonaws.com/ww/jenkins-alpine-agent-aws:2.479.3.
+docker build -f Dockerfile -t 136474465872.dkr.ecr.eu-west-1.amazonaws.com/ww/jenkins-alpine-agent-aws:2.555.2.
 
 aws ecr get-login-password --region eu-west-1 | docker login --username AWS --password-stdin 136474465872.dkr.ecr.eu-west-1.amazonaws.com
 
-docker tag <new build image id or name> 136474465872.dkr.ecr.eu-west-1.amazonaws.com/ww/jenkins-alpine-agent-aws:2.479.3
+docker tag <new build image id or name> 136474465872.dkr.ecr.eu-west-1.amazonaws.com/ww/jenkins-alpine-agent-aws:2.555.2
 
-docker push 136474465872.dkr.ecr.eu-west-1.amazonaws.com/ww/jenkins-alpine-agent-aws:2.479.3
+docker push 136474465872.dkr.ecr.eu-west-1.amazonaws.com/ww/jenkins-alpine-agent-aws:2.555.2
 ```
 
 
